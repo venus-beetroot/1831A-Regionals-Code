@@ -122,6 +122,7 @@ void auton_init()
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.calibrate(); // calibrate sensors
     // Additional auton init code
+    imu.set_heading(0);
 }
 
 
@@ -206,26 +207,34 @@ void autonomous()
     // pros::c::delay(3000);
     // chassis.turnToHeading(0, 10000);
     // chassis.moveToPoint(0, 24, 1000);
-    chassis.setPose(0, 0, 0);
-    chassis.moveToPose(0.0, 27.0, 0, 4000, { .forwards = false }, false);
-    mogo_mech.set_value(true);
 
-    
+    mogo_mech.set_value(true);
+    chassis.setPose(-64.612, -24.205, 0);
+    chassis.moveToPose(-20.681, -23.938, 0, 4000, { .forwards = false }, true);
+    pros::delay(500);
+    chassis.moveToPose(-23.681, -23.938, 0, 4000, { .forwards = false}, false);
+    mogo_mech.set_value(false);
+
+    // intake preload
     intake.move(127);
     pros::delay(3000);
 
+
+    // release first mobile goal
     mogo_mech.set_value(false);
-    chassis.setPose(0, 0, 0);
-    chassis.moveToPose(24.0, 0.0, 90, 4000, {.forwards = true}, false);
+
+    
+    //get a ring on the floor - make sure not to get it off the robot, keep it on the intake
+    chassis.moveToPose(-23.414, -47.212, -90, 4000, {.forwards = true}, false);
     intake.move(127);
     pros::delay(500);
 
 
-    chassis.setPose(0, 0, 0);
-    chassis.moveToPose(0.0, 23.0, 0, 4000, {.forwards = false}, false);
+    // go to second mobile goal and intake ring
+    chassis.moveToPose(-4.152, -46.945, 0, 4000, {.forwards = false}, false);
     mogo_mech.set_value(true);
     intake.move(127);
-    pros::delay(3000);   
+    pros::delay(3000);
 }
 
 /**
