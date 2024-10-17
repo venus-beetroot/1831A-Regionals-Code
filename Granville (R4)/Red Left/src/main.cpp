@@ -122,6 +122,7 @@ void auton_init()
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.calibrate(); // calibrate sensors
     // Additional auton init code
+    imu.set_heading(0);
 }
 
 
@@ -206,15 +207,42 @@ void autonomous()
     // pros::c::delay(3000);
     // chassis.turnToHeading(0, 10000);
     // chassis.moveToPoint(0, 24, 1000);
-    chassis.setPose(0, 0, 0);
-    chassis.moveToPose(0.0, 27.0, 0, 4000, { .forwards = false }, false);
     mogo_mech.set_value(true);
+    chassis.setPose(-64.612, 23.681, 0);
+    chassis.moveToPose(-20.622, 23.622, 0, 4000, { .forwards = false }, true);
+    pros::delay(200);
+    chassis.moveToPose(-23.622, 23.622, 0, 4000, { .forwards = false}, false);
+    mogo_mech.set_value(false);
 
+    
+    // score preload
     intake.move(127);
     pros::delay(3000);
-    
 
-    chassis.moveToPose(13.0, 40.0, -45, 4000, {.forwards = false}, false);
+
+    // go to first ring and score onto stake
+    chassis.moveToPose(-23.414, 44.223, -90, 4000, { .forwards = true }, false);
+    chassis.moveToPose(-23.414, 47.223, -90, 4000, { .forwards = true }, true);
+    intake.move(127);
+    pros::delay(3000);
+
+
+    // go to second ring and score onto stake
+    imu.set_heading(0);
+    chassis.moveToPose(-3.419, 43.478, 103, 4000, { .forwards = true }, false);
+    chassis.moveToPose(-4.419, 43.478, 103, 4000, { .forwards = true }, true);
+    intake.move(127);
+    pros::delay(3000);
+
+    // go to third ring and score onto stake
+    chassis.moveToPose(-4.687, 51.503, 0, 4000, { .forwards = true }, true);
+    intake.move(127);
+    pros::delay(5000);
+
+
+    // go touch the middle stake
+    chassis.moveToPose(-15.655, 7.63, 193, 10000, { .forwards = true }, true);
+
 }   //same thing with blue right, expand to intake more rings on stake and then touch the ladder
 
 /**
