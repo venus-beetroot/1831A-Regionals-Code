@@ -122,6 +122,7 @@ void auton_init()
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.calibrate(); // calibrate sensors
     // Additional auton init code
+    imu.set_heading(0);
 }
 
 
@@ -206,15 +207,46 @@ void autonomous()
     // pros::c::delay(3000);
     // chassis.turnToHeading(0, 10000);
     // chassis.moveToPoint(0, 24, 1000);
-    chassis.setPose(0, 0, 0);
-    chassis.moveToPose(0.0, 27.0, 0, 4000, { .forwards = false }, false);
+
+
+
+    // go to first mobile goal and clamp it
     mogo_mech.set_value(true);
+    chassis.setPose(64.601, 22.611, 0);
+    chassis.moveToPose(20.537, 23.547, 0, 4000, { .forwards = false }, true);
+    pros::delay(200);
+    chassis.moveToPose(23.537, 23.547,0, 4000, { .forwards = false}, false);
+    mogo_mech.set_value(false);
 
     
+    // score preload
     intake.move(127);
     pros::delay(3000);
 
-    chassis.moveToPose(13.0, 40.0, 45, 4000, {.forwards = false}, false);
+
+    // go to first ring and score onto stake
+    chassis.setPose(23.537, 23.547, 0);
+    chassis.moveToPose(23.537, 47.357, -90, 4000, { .forwards = true }, false);
+    intake.move(127);
+    pros::delay(3000);
+
+
+    // go to second ring and score onto stake
+    imu.set_heading(180);
+    chassis.setPose(23.537, 47.357, 0);
+    chassis.moveToPose(4.81, 43.077, 257, 4000, { .forwards = true }, false);
+    intake.move(127);
+    pros::delay(5000);
+
+
+    // go to third ring nd score onto stake
+    chassis.moveToPose(4.007, 52.975, 0, 4000, { .forwards = true }, true);
+    intake.move(127);
+    pros::delay(5000);
+
+
+    // go touch the middle stake
+    chassis.moveToPose(17.384, 6.292, 170, 10000, { .forwards = true }, true);
 
 
     //expand this code so that maybe intake more rings onto a goal and then touch the ladder or smth
